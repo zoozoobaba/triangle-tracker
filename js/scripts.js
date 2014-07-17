@@ -1,5 +1,5 @@
 var sanitize = function(sidesArray){
-  var total;
+  var total = 0;
   sidesArray.forEach(function(side){
     total += side;
   });
@@ -9,12 +9,7 @@ var sanitize = function(sidesArray){
 $(document).ready(function() {
   $("form#sides-input-form").submit(function(event) {
     event.preventDefault();
-    var sideOne = $("#sideOne").val();
-    var sideTwo = $("#sideTwo").val();
-    var sideThree = $("#sideThree").val();
-    var allSides = [parseInt(sideOne), parseInt(sideTwo), parseInt(sideThree)];
-    var triangleType = "";
-    allSides.sort();
+    var allSides = [parseInt($("#sideOne").val()), parseInt($("#sideTwo").val()), parseInt($("#sideThree").val())].sort();
 
     $("#sideOne").val("");
     $("#sideTwo").val("");
@@ -29,30 +24,21 @@ $(document).ready(function() {
                           thirdSide: allSides[2],
                           sides: allSides,
                           type: function() {
-                            if (this.firstSide === this.secondSide &&
-                                this.secondSide === this.thirdSide){
-                              return "equilateral";
+                            if (this.firstSide === this.thirdSide){
+                              $("#equilateral-list").append("<li>" + allSides.join(", ") + "</li>");
                             }
                             else if (this.firstSide === this.secondSide ||
                                      this.secondSide === this.thirdSide){
-                              return "isoceles";
+                              $("#isoceles-list").append("<li>" + allSides.join(", ") + "</li>");
                             }
                             else {
-                              return "scalene";
+                              $("#scalene-list").append("<li>" + allSides.join(", ") + "</li>");
                             }
                           }
                         };
     }
     if (newTriangle){
-      triangleType = newTriangle.type();
-      if (triangleType === "equilateral"){
-        $("#equilateral-list").append("<li>" + allSides.join(", ") + "</li>");
-      } else if (triangleType === "isoceles") {
-        $("#isoceles-list").append("<li>" + allSides.join(", ") + "</li>");
-      } else {
-        $("#scalene-list").append("<li>" + allSides.join(", ") + "</li>");
-      };
+      newTriangle.type();
     }
   });
-
 });
